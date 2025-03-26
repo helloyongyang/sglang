@@ -350,4 +350,16 @@ class InternLM2ForCausalLM(nn.Module):
                     weight_loader(param, loaded_weight)
 
 
+    def get_embed_and_head(self):
+        return self.model.tok_embeddings.weight, self.output.weight
+
+    def set_embed_and_head(self, embed, head):
+        del self.model.tok_embeddings.weight
+        del self.output.weight
+        self.model.tok_embeddings.weight = embed
+        self.output.weight = head
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
+
+
 EntryClass = InternLM2ForCausalLM
